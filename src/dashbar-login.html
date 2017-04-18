@@ -1,0 +1,48 @@
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="app-data.html">
+
+<dom-module id="dashbar-login">
+	<template>
+		<style>
+			:host {
+				margin: 0;
+				padding: 0;
+			}
+			a {
+				color: #fff;
+				display: inline-block;
+				font-size: 13px;
+			}
+		</style>
+
+		<app-data key="userData" data="{{storedUser}}"></app-data>
+
+          <template is="dom-if" if="{{!link}}">
+			<a name="register-login" href="/register-login">Log In</a>
+		</template>
+
+		<template is="dom-if" if="{{link}}">
+			<h2>Hello, [[storedUser.name]]!</h2>
+            <a name="register-login" href="/register-login">Log Out</a>
+		</template>
+		
+	</template>
+
+	<script>
+		(function() {
+			Polymer({
+				is: 'dashbar-login',
+				properties: {
+					storedUser: Object,
+					link: {
+						type: Boolean,
+						value: false
+					}
+				},
+				
+			});
+		}());
+	</script>
+</dom-module>

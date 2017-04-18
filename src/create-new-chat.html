@@ -1,0 +1,62 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="app-data.html">
+
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="create-chatroom.html">
+
+<dom-module id="create-new-chat">
+	<template>
+		<style>
+			:host {
+				margin: 0;
+				padding: 0;
+			}
+			paper-button {
+				background: #f44336;
+				color: #fff;
+				font-weight: bold;
+			}
+			a {
+				color: #fff;
+				display: inline-block;
+				font-size: 13px;
+			}
+		</style>
+
+		<app-data key="userData" data="{{storedUser}}"></app-data>
+
+		<template is="dom-if" if="{{link}}">
+			<paper-button raised on-tap="goToCreateChat">Make a New Room</paper-button>
+		</template>
+		<template is="dom-if" if="{{link}}">
+			<a on-tap="goToCreateChat" href>Make a New Room</a>
+		</template>
+
+	</template>
+
+	<script>
+		(function() {
+			Polymer({
+				is: 'create-new-chat',
+
+				properties: {
+					storedUser: Object,
+					link: {
+						type: Boolean,
+						value: true
+					}
+				},
+				ready: function() {
+			        
+			        console.log('in an octopuses garden');
+			      },
+
+				goToCreateChat: function() {
+					console.log('im here');
+					this.set('route.path', '/create-chatroom');
+				}
+			});
+		}());
+	</script>
+</dom-module>

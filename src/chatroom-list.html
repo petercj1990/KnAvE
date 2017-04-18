@@ -1,0 +1,37 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="app-data.html">
+<link rel="import" href="shared-styles.html">
+
+
+<dom-module id="chatroom-list">
+
+  <template>
+
+  <iron-ajax 
+      id="getchatrooms"
+      method="get"
+      url="http://localhost:3001/api/getChatrooms"
+      handle-as="text"
+      last-response="{{chatrooms}}"></iron-ajax>
+
+    <div> Chatrooms: </div>
+    <template is="dom-repeat" items="{{chatrooms}}">
+        <div><a >{{item.Name}}</span></div>
+    </template>
+    
+  </template>
+
+  <script>
+    Polymer({
+      is: 'chatroom-list',
+      ready: function() {
+        this.rooms = [];
+        console.log('im loading', '{{chatrooms}}');
+      }
+    });
+  </script>
+
+</dom-module>
