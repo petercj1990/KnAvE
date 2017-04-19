@@ -1,14 +1,19 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="app-data.html">
 <link rel="import" href="shared-styles.html">
 
 
+
 <dom-module id="chatroom-list">
 
   <template>
+
+
+
 
   <iron-ajax 
       id="getchatroomsinAjax"
@@ -18,7 +23,7 @@
 
     <div> Chatrooms: </div>
     <template is="dom-repeat" items="[[rooms]]">
-        <div><a on-tap="route">{{item.Name}}</a></div>
+        <div><paper-button raised on-tap="route">{{item.Name}}</paper-button></div>
         <span></span>
     </template>
 
@@ -42,10 +47,15 @@
           console.log('im loading', this.rooms);
       },
       route: function (e){
-          var room = e.model.room;
+
           var item = e.model.item;
-          console.log(room, item);
-          this.set('route.path', '/chatroom/' +item);
+          console.log(item);
+          var newRoute = '/council-room/' + item.Name;
+          console.log(newRoute);
+          //console.log(route.path);
+          window.history.pushState({}, null, newRoute);
+          window.dispatchEvent(new CustomEvent('location-changed'));
+
       }
     });
   </script>

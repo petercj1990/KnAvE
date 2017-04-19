@@ -1,0 +1,161 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/chat-window/chat-window.html">
+<link rel="import" href="../bower_components/pubnub-element/pubnub-element.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+
+<link rel="import" href="app-data.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module auto id="council-room">
+  <template onLoad()>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+      h1{
+        size: 80px;
+      }
+      chat-window.styled {
+        font-size: small;
+        --chat-messages-height: 12em;
+        --paper-input-container-input: {
+          margin: 0 2px;
+        }
+        --chat-message-text: {
+          background-color: #f0f0f0;
+          padding: 6px 8px;
+          margin: 4px 0;
+          border-radius: 6px;
+        };
+        --chat-input-button: {
+        color: black;
+        height: 48px;
+        width: 48px;
+      }
+    }
+  }
+    </style>
+
+    <iron-localstorage name="user-storage" value="{{storedUser}}"></iron-localstorage>
+    <app-data key="userData" data="{{storedUser}}"></app-data>
+
+    <app-location route="{{route}}" query-params="{{queryParams}}"></app-location>
+
+    <iron-ajax 
+      id="getCouncilRoomDatainAjax"
+      url= 'http://localhost:3001/chatroomsName'
+      params='{"Name":"{{currRoom}}"}'
+      method="get"
+      content-type="text"
+      handle-as="text"
+      on-response="handleResponse"
+      on-error="handleUserError"
+      response: {{currRoom}}
+      ></iron-ajax>
+
+<!--       <core-pubnub 
+      publish_key="pub-c-8dc4c540-8c40-4fdb-925c-fb1f304ab5c0" subscribe_key="sub-c-8ff89c3a-fed2-11e6-8ce0-0619f8945a4f" id="pub" uuid="{{uuid}}">
+        <core-pubnub-subscribe channel="{{currRoom}}" id="pub" on-callback="{{subscribeCallback}}">
+          <core-pubnub-publish id="pub" channel="{{currRoom}}" message=""></core-pubnub-publish>  
+        </core-pubnub-subscribe>
+    </core-pubnub> -->
+  
+    <div class="card">
+      <h1>you are in the council room {{currRoom}}</h1>
+      <chat-window
+      class="styled"
+      id="chat"
+      author="{{storedUser.name}}"
+      on-send ="sendMsg"
+      input-text="{{text}}"
+      messages= "[[messages]]"
+      single-line>
+    </chat-window>
+    </div>
+    
+  </template>
+
+
+  <script id='scripts'>
+    (function() {
+      Polymer({
+        is: 'council-room',
+        properties: {
+          route: String,
+          formData: {
+            type: Object,
+            value: {}
+          },
+          currRoom: String,
+          storedUser: Object,
+          error: String,
+          messages: {
+            type: Array,
+            value: [],
+            notify: true
+          },
+          now: {
+            type: Number,
+            value: function(){
+              return Date.now();
+            }
+          },
+          socket: Object,
+          text: String,
+          observers: [
+              '_messagesChanged(messages.splices)'
+          ],
+        },
+         _setReqBody: function() {
+          this.formData.Creator = this.currRoom;
+          this.$.getCouncilRoomDatainAjax.body = this.formData;
+          console.log(this.formData);
+        },
+      ready: function() {
+        this.socket = io();
+        console.log(this.route.path);
+        var search = this.route.path;
+        search = search.toString();
+        search = search.replace('/council-room/', '');
+        console.log(search);
+        this.currRoom = search;
+        this.recieveMsg();
+      },
+
+      handleResponse: function (data) {
+          this.chatHistory = data.detail.response;
+          console.log('im loading', this.chatHistory);
+      },
+      sendMsg: function(){
+        if(!this.text){
+          return;
+        }
+        var msg = {
+          author:  this.storedUser.name,
+          text: this.text,
+          created: Date.now()
+        };
+        console.log(this.messages, msg);
+        this.text = "";
+        this.socket.emit('chat message', msg);
+        msg = {};
+        return;
+      },
+      recieveMsg: function (){
+        var self = this;
+        self.messages = this.messages;
+        console.log('i get it');
+        this.socket.on('chat message', function(msg) {
+            console.log('im here', msg, this.messages);
+            self.push('messages', msg);
+        });
+      }
+      
+      });
+    }());
+  </script>
+</dom-module>

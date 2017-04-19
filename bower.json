@@ -19,7 +19,9 @@
     "paper-button": "PolymerElements/paper-button#^1.0.14",
     "iron-input": "PolymerElements/iron-input#^1.0.10",
     "paper-input": "PolymerElements/paper-input#^1.1.23",
-    "iron-icons": "^1.2.0"
+    "iron-icons": "^1.2.0",
+    "chat-window": "^0.4.10",
+    "pubnub-element": "^4.0.1"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"

@@ -42,10 +42,11 @@
      <app-data key="userData" data="{{storedUser}}"></app-data>
 
     <iron-ajax
-      id="createChatroominAjax"
+      id="getChatroominAjax"
       method="post"
-      content-type="application/json"
+      content-type="text"
       handle-as="text"
+      on-error="handleUserError"
       ></iron-ajax>
 
     <div class="card">
@@ -91,17 +92,29 @@
 
         _setReqBody: function() {
           this.formData.Creator = this.storedUser.name;
-          this.$.createChatroominAjax.body = this.formData;
+          this.$.getChatroominAjax.body = this.formData;
+          
         },
         ready: function() {
           console.log(this.storedUser);
         },
 
         createRoom: function() {
-          this.$.createChatroominAjax.url = 'http://localhost:3001/chat';
+          this.$.getChatroominAjax.url = 'http://localhost:3001/chat';
           this._setReqBody();
-          this.$.createChatroominAjax.generateRequest();
+          this.$.getChatroominAjax.generateRequest();
+
+          var item = this.formData.chatroomName;
+          console.log(item);
+          var newRoute = '/council-room/' + item.Name;
+          console.log(newRoute);
+          //console.log(route.path);
+          window.history.pushState({}, null, newRoute);
+          window.dispatchEvent(new CustomEvent('location-changed'));
         },
+        handleUserError: function(event) {
+          this.error = event.detail.request.xhr.response;
+        }
 
       });
     }());

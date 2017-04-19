@@ -13,7 +13,7 @@ var ChatSchema   = new Schema({
 
 ChatSchema.pre('save', function(next) {
     var chat = this;
-    console.log('im saving', chat);
+    //console.log('im saving', chat);
     next();
     
 });

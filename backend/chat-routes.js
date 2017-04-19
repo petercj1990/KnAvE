@@ -91,29 +91,45 @@ router.post('/chat', function(req, res) {
 });
 
 router.get('/chatrooms', function(req, res) {
-  // console.log('hitting chatroom');
-  // var list = [];
+
   var chat = require('./models/chat');
-  // chat.find({}, function(err, rooms){ 
-  //   if(err){
-  //       res(err);
-  //   }
-  //   rooms.forEach(function(room){
-  //     console.log(room);
-  //     if(room.Active){
-  //       list.push(room);
-  //     }
-  //   });
-  // });
-  // console.log(list);
-  // res.send(list);
+
 
   chat.find({}, 'Name', function(err, rooms){
         if(err){
           console.log(err);
         } else{
-            console.log(rooms);
+            //console.log(rooms);
             res.send(rooms);
+        }
+  });
+
+});
+
+router.get('/chatroomsName', function(req, res) {
+
+  var chat = require('./models/chat');
+  console.log(req.body);
+  var foundRoom;
+  chat.find({}, 'Name', function(err, rooms){
+        if(err){
+          console.log(err);
+        } else{
+            console.log(rooms);
+            console.log("lifeissad",req.body);
+            for (var x = 0; x < rooms.length; x++){
+                if(rooms[x].Name === req.body.Search){
+                  console.log('i found the room', rooms[x]);
+                  foundRoom=rooms[x];
+                }
+            }
+            if(!foundRoom){
+
+            }
+            else{
+              console.log(foundRoom);
+              res.send(foundRoom);
+            }
         }
   });
 
