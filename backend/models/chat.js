@@ -8,12 +8,13 @@ var ChatSchema   = new Schema({
     ChatList: [{ type: String}],
     Name: { type: String},
     Active: {type: Boolean},
-    Creator: { type: string }
+    Creator: { type: String }
 });
 
 ChatSchema.pre('save', function(next) {
     var chat = this;
-    console.log('im saving');
+    console.log('im saving', chat);
+    next();
     
 });
 

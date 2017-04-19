@@ -38,7 +38,8 @@
     <app-location route="{{route}}"></app-location>
 
     <iron-localstorage name="user-storage" value="{{storedUser}}"></iron-localstorage>
-    <app-data key="userData" data="{{storedUser}}"></app-data>
+
+     <app-data key="userData" data="{{storedUser}}"></app-data>
 
     <iron-ajax
       id="createChatroominAjax"
@@ -48,7 +49,7 @@
       ></iron-ajax>
 
     <div class="card">
-      <div id="unauthenticated" hidden$="[[storedUser.loggedin]]">
+      <div id="authenticated">
        
         
         <paper-input-container>
@@ -67,7 +68,12 @@
       </div>
 
     </div>
+
+    <div id="unauthenticated" hidden$="[[storedUser.loggedin]]">
+      please log in to view content
+    </div>
   </template>
+
 
   <script>
     (function() {
@@ -84,15 +90,16 @@
         },
 
         _setReqBody: function() {
-          this.$.registerLoginAjax.body = this.formData;
-
+          this.formData.Creator = this.storedUser.name;
+          this.$.createChatroominAjax.body = this.formData;
+        },
+        ready: function() {
+          console.log(this.storedUser);
         },
 
         createRoom: function() {
-          var creator  = this.storedUser;
           this.$.createChatroominAjax.url = 'http://localhost:3001/chat';
           this._setReqBody();
-          this.creator = creator;
           this.$.createChatroominAjax.generateRequest();
         },
 

@@ -11,25 +11,41 @@
   <template>
 
   <iron-ajax 
-      id="getchatrooms"
+      id="getchatroomsinAjax"
       method="get"
-      url="http://localhost:3001/api/getChatrooms"
-      handle-as="text"
-      last-response="{{chatrooms}}"></iron-ajax>
+      handle-as="json"
+      on-response="handleResponse"></iron-ajax>
 
     <div> Chatrooms: </div>
-    <template is="dom-repeat" items="{{chatrooms}}">
-        <div><a >{{item.Name}}</span></div>
+    <template is="dom-repeat" items="[[rooms]]">
+        <div><a on-tap="route">{{item.Name}}</a></div>
+        <span></span>
     </template>
-    
+
   </template>
 
   <script>
     Polymer({
       is: 'chatroom-list',
+      properties:{
+            rooms: {
+              type: Array
+            },
+          },
       ready: function() {
-        this.rooms = [];
-        console.log('im loading', '{{chatrooms}}');
+        this.$.getchatroomsinAjax.url = 'http://localhost:3001/chatrooms';
+        this.$.getchatroomsinAjax.generateRequest();
+        
+      },
+      handleResponse: function (data) {
+          this.rooms = data.detail.response;
+          console.log('im loading', this.rooms);
+      },
+      route: function (e){
+          var room = e.model.room;
+          var item = e.model.item;
+          console.log(room, item);
+          this.set('route.path', '/chatroom/' +item);
       }
     });
   </script>

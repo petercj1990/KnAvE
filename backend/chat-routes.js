@@ -69,12 +69,16 @@ router.get('/hello', function(req, res) {
 
 
 router.post('/chat', function(req, res) {
-    var Chat = require('./models/chat');
+  var Chat = require('./models/chat');
   //create new chat
+
+  console.log('chat', req.body);
+  var users = req.body.creator;
   var chat = new Chat ({
-    Name: req.name,
+    Name: req.body.chatroomName,
     Active: true,
-    Creator: req.creator,
+    Creator: req.body.Creator,
+    Users: [req.body.Creator]
   });
 
   chat.save(function(err){
@@ -87,17 +91,31 @@ router.post('/chat', function(req, res) {
 });
 
 router.get('/chatrooms', function(req, res) {
+  // console.log('hitting chatroom');
+  // var list = [];
   var chat = require('./models/chat');
-  chat.find({}, function(err, rooms){
-    var list = {};
-    rooms.forEach(function(room){
-      if(room.Active){
-        list[room._id]= room;
-      }
-    });
-  });
+  // chat.find({}, function(err, rooms){ 
+  //   if(err){
+  //       res(err);
+  //   }
+  //   rooms.forEach(function(room){
+  //     console.log(room);
+  //     if(room.Active){
+  //       list.push(room);
+  //     }
+  //   });
+  // });
+  // console.log(list);
+  // res.send(list);
 
-  res.send(list);
+  chat.find({}, 'Name', function(err, rooms){
+        if(err){
+          console.log(err);
+        } else{
+            console.log(rooms);
+            res.send(rooms);
+        }
+  });
 
 });
 

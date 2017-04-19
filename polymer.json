@@ -5,6 +5,7 @@
     "src/home-quotes.html",
     "src/register-login.html",
     "src/secret-quotes.html",
+    "src/create-chatroom.html",
     "src/view404.html"
   ],
   "sourceGlobs": [

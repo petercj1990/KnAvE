@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="app-data.html">
 
 <link rel="import" href="shared-styles.html">
@@ -47,11 +48,6 @@
 						value: true
 					}
 				},
-				ready: function() {
-			        
-			        console.log('in an octopuses garden');
-			      },
-
 				goToCreateChat: function() {
 					console.log('im here');
 					this.set('route.path', '/create-chatroom');

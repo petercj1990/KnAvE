@@ -16,6 +16,10 @@ var app = express();
 app.use(express.static('../'));
 app.use(express.static('../images'));
 
+router = express.Router({
+  caseSensitive: true
+});
+
 app.get('/', function(req, res) {
     res.render('index.html');
 });
